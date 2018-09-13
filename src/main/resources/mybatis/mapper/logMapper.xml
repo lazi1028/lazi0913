@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bcht.axletempmonitor.mapper.LogMapper" >
+    <resultMap id="logResultMap" type="com.bcht.axletempmonitor.pojo.BchLogtrace" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="operator" property="operator" jdbcType="VARCHAR" />
+        <result column="operadetails" property="operadetails" jdbcType="VARCHAR" />
+        <result column="operatime" property="operatime" jdbcType="TIMESTAMP" />
+        <result column="operafunc" property="operafunc" jdbcType="VARCHAR" />
+        <result column="requestip" property="requestip" jdbcType="VARCHAR" />
+    </resultMap>
+
+   <insert id="insertLog" parameterType="com.bcht.axletempmonitor.pojo.BchLogtrace">
+       insert into bch_logtrace(operator,operadetails,operafunc,requestip,operatime)
+       values (#{operator},#{operadetails},#{operafunc},#{requestip},NOW())
+   </insert>
+
+    <select id="queryLog" parameterType="com.bcht.axletempmonitor.vo.LogVo" resultMap="logResultMap">
+        select operator,operadetails,operafunc,requestip,operatime from bch_logtrace where 1=1
+        <choose>
+            <when test="operator!=null"> and operator=#{operator}</when>
+            <when test="operadetails!=null"> and operadetails like "%"#{operadetails}"%"</when>
+            <otherwise></otherwise>
+        </choose>
+        <if test="starttime!=null"> and operatime &gt;= #{starttime}</if>
+        <if test="endtime!=null"> and operatime &lt;= #{endtime}</if>
+        order by operatime
+    </select>
+
+</mapper>
+
+

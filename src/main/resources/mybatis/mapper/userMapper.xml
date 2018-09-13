@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bcht.axletempmonitor.mapper.UserMapper" >
+    <!--用户角色关系表-->
+    <resultMap id="userRoleResultMap" type="com.bcht.axletempmonitor.pojo.BchUserRole" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="userid" property="userid" jdbcType="INTEGER" />
+        <result column="roleid" property="roleid" jdbcType="INTEGER" />
+    </resultMap>
+    <!--角色权限关系表-->
+    <resultMap id="rolePermissionResultMap" type="com.bcht.axletempmonitor.pojo.BchRolePermission" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="roleid" property="roleid" jdbcType="INTEGER" />
+        <result column="permid" property="permid" jdbcType="INTEGER" />
+    </resultMap>
+    <!-- 用户 -->
+    <resultMap id="userResultMap" type="com.bcht.axletempmonitor.pojo.BchUserinfo" >
+        <id column="userid" property="userid" jdbcType="INTEGER" />
+        <result column="username" property="username" jdbcType="VARCHAR" />
+        <result column="password" property="password" jdbcType="VARCHAR" />
+        <result column="realname" property="realname" jdbcType="VARCHAR" />
+        <result column="sex" property="sex" jdbcType="VARCHAR" />
+        <result column="mobilephone" property="mobilephone" jdbcType="VARCHAR" />
+        <result column="department" property="department" jdbcType="VARCHAR" />
+        <result column="logintime" property="logintime" jdbcType="TIMESTAMP" />
+        <result column="lastlogintime" property="lastlogintime" jdbcType="TIMESTAMP" />
+        <!-- 用户角色一对一关系 -->
+        <association property="userRole" resultMap="userRoleResultMap">
+        </association>
+    </resultMap>
+    <!-- 角色 -->
+    <resultMap id="roleResultMap" type="com.bcht.axletempmonitor.pojo.BchRoleinfo">
+        <id column="roleid" property="roleid" jdbcType="INTEGER" />
+        <result column="rolename" property="rolename" jdbcType="VARCHAR" />
+        <result column="roledesc" property="roledesc" jdbcType="VARCHAR" />
+        <!--角色权限 一对多 关系-->
+        <collection property="rolePermissionList" resultMap="rolePermissionResultMap">
+        </collection>
+    </resultMap>
+    <!-- 权限 -->
+    <resultMap id="permissionResultMap" type="com.bcht.axletempmonitor.pojo.BchPermission">
+        <id column="permid" property="permid" jdbcType="INTEGER" />
+        <result column="permname" property="permname" jdbcType="VARCHAR" />
+        <result column="resourcetype" property="resourcetype" jdbcType="VARCHAR" />
+        <result column="resourceurl" property="resourceurl" jdbcType="VARCHAR" />
+        <result column="permdesc" property="permdesc" jdbcType="VARCHAR" />
+        <result column="parentid" property="parentid" jdbcType="VARCHAR" />
+        <result column="parentids" property="parentids" jdbcType="VARCHAR" />
+        <result column="permissions" property="permissions" jdbcType="VARCHAR" />
+    </resultMap>
+    <!-- 用户查询列表封装 -->
+    <resultMap id="defineUserResultMap" type="com.bcht.axletempmonitor.pojo.UserRoleResult">
+        <result column="userid" property="userid" jdbcType="VARCHAR" />
+        <result column="username" property="username" jdbcType="VARCHAR" />
+        <result column="realname" property="realname" jdbcType="VARCHAR" />
+        <result column="sex" property="sex" jdbcType="VARCHAR" />
+        <result column="mobilephone" property="mobilephone" jdbcType="VARCHAR" />
+        <result column="department" property="department" jdbcType="VARCHAR" />
+        <result column="lastlogintime" property="lastlogintime" jdbcType="VARCHAR" />
+        <result column="roleid" property="roleid" jdbcType="VARCHAR" />
+        <result column="rolename" property="rolename" jdbcType="VARCHAR" />
+    </resultMap>
+    <!--角色列表封装-->
+    <resultMap id="defineRoleResultMap" type="com.bcht.axletempmonitor.pojo.RoleResult">
+        <result column="roleid" property="roleid" jdbcType="INTEGER" />
+        <result column="rolename" property="rolename" jdbcType="VARCHAR" />
+        <result column="roledesc" property="roledesc" jdbcType="VARCHAR" />
+    </resultMap>
+
+   <sql id="User_Column_List" >
+      userid,username,password,realname,sex,mobilephone,lastlogintime,logintime,department
+    </sql>
+    <!-- 根据用户名查用户信息 -->
+    <select id="getUserByName" parameterType="java.lang.String" resultMap="userResultMap" >
+        SELECT userinfo.userid,username,password,realname,sex,mobilephone,lastlogintime,logintime,roleid
+        FROM bch_userinfo userinfo,bch_user_role userrole
+        WHERE userinfo.userid=userrole.userid and userinfo.username = #{username}
+    </select>
+
+    <select id="getPermissionByRoleId" parameterType="java.lang.Integer" resultMap="roleResultMap">
+        select role.roleid,role.rolename,role.roledesc,roleperm.id,roleperm.roleid,roleperm.permid
+        from bch_roleinfo role,bch_role_permission roleperm
+        where role.roleid=roleperm.roleid and role.roleid=#{roleid}
+    </select>
+    <select id="queryUserById" parameterType="java.lang.Integer" resultMap="userResultMap">
+        select userinfo.userid,username,password,realname,sex,mobilephone,lastlogintime,logintime,department,userrole.roleid
+        from bch_userinfo userinfo,bch_user_role userrole where userinfo.userid=userrole.userid and  userinfo.userid=#{userid}
+    </select>
+
+    <update id="updUserInfo" parameterType="com.bcht.axletempmonitor.vo.UserVo">
+          update bch_userinfo
+          <trim prefix="set" suffixOverrides=",">
+              <if test="realname!=null">realname=#{realname},</if>
+              <if test="department!=null">department=#{department},</if>
+              <if test="sex!=null">sex=#{sex},</if>
+              <if test="mobilephone!=null">mobilephone=#{mobilephone},</if>
+          </trim>
+        where userid=#{userid}
+    </update>
+
+    <select id="queryOriginPwd" parameterType="java.lang.Integer" resultType="java.lang.String">
+        select password from bch_userinfo  where userid=#{userid}
+    </select>
+
+    <update id="updPassword" parameterType="com.bcht.axletempmonitor.vo.UserVo">
+        update bch_userinfo
+        <trim prefix="set" suffixOverrides=",">
+            <if test="newpassword!=null">password=#{newpassword},</if>
+        </trim>
+        where userid=#{userid} and password=#{password}
+    </update>
+
+    <!-- 根据用户名 等条件模糊查询用户-->
+    <select id="fuzzyQueryUser" parameterType="com.bcht.axletempmonitor.vo.UserVo" resultMap="defineUserResultMap">
+        select user1.userid,user1.username,user1.realname,user1.mobilephone,user1.sex,user1.department,user1.lastlogintime,usrrole.roleid,role.rolename from
+        bch_userinfo user1,bch_user_role usrrole,bch_roleinfo role where user1.userid=usrrole.userid and usrrole.roleid=role.roleid
+        <trim prefix="and" suffixOverrides="and">
+            <choose>
+                <when test="realname!=null">realname like "%"#{realname}"%"</when>
+                <when test="username!=null">username like "%"#{username}"%"</when>
+                <when test="mobilephone!=null">mobilephone like "%"#{mobilephone}"%"</when>
+                <when test="department!=null">department like "%"#{department}"%"</when>
+                <otherwise></otherwise>
+            </choose>
+        </trim>
+        <if test="sex!=null">
+            and user1.sex=#{sex}
+        </if>
+        <if test="roleid!=null">
+            and usrrole.roleid=#{roleid}
+        </if>
+        order by user1.addtime
+    </select>
+    <!--添加用户-->
+    <insert id="insertUser" parameterType="com.bcht.axletempmonitor.vo.UserVo">
+      <selectKey keyProperty="userid" resultType="int" order="AFTER">
+          select LAST_INSERT_ID()
+      </selectKey>
+      insert into bch_userinfo(username,password,sex,realname,mobilephone,department,addtime) values(
+      #{username},#{newpassword},#{sex},#{realname},#{mobilephone},#{department},NOW() );
+    </insert>
+    <insert id="insertUserRole" parameterType="com.bcht.axletempmonitor.vo.UserVo">
+        insert into bch_user_role(userid,roleid) values(#{userid},#{roleid});
+    </insert>
+
+    <!--修改用户信息-->
+    <update id="updUser" parameterType="com.bcht.axletempmonitor.vo.UserVo">
+         update bch_userinfo
+         <trim prefix="set" suffixOverrides=",">
+             <if test="realname!=null">realname=#{realname},</if>
+             <if test="mobilephone!=null">mobilephone=#{mobilephone},</if>
+             <if test="sex!=null">sex=#{sex},</if>
+             <if test="department!=null">department=#{department},</if>
+             <if test="username!=null">username=#{username},</if>
+             <if test="newpassword!=null">password=#{newpassword},</if>
+         </trim>
+        where userid=#{userid}
+    </update>
+    <update id="updUserRole" parameterType="com.bcht.axletempmonitor.vo.UserVo">
+        update bch_user_role
+        <trim prefix="set" suffixOverrides=",">
+            <if test="roleid!=null">roleid=#{roleid},</if>
+        </trim>
+        where userid=#{userid}
+    </update>
+    <!-- 删除用户 -->
+    <delete id="delUser" parameterType="com.bcht.axletempmonitor.vo.UserVo">
+        delete from bch_user_role where
+        <choose>
+            <when test="userid!=null">userid=#{userid}</when>
+            <when test="selectids!=null">userid in
+                <foreach collection="selectids" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </when>
+            <otherwise></otherwise>
+        </choose>
+        ;
+        delete from bch_userinfo where
+        <choose>
+            <when test="userid!=null">userid=#{userid}</when>
+            <when test="selectids!=null">userid in
+                <foreach collection="selectids" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </when>
+            <otherwise></otherwise>
+        </choose>
+    </delete>
+
+    <!-- 查所有角色 -->
+    <select id="queryRole" resultMap="defineRoleResultMap">
+        select roleid,rolename,roledesc from bch_roleinfo order by addtime
+    </select>
+
+    <!--添加角色 -->
+    <insert id="insertRole" parameterType="com.bcht.axletempmonitor.vo.UserVo">
+        <selectKey keyProperty="roleid" resultType="int" order="AFTER">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into bch_roleinfo(rolename,roledesc,addtime) values(
+        #{rolename},#{roledesc},NOW() )
+    </insert>
+    <!--为角色分配权限-->
+    <insert id="insertRolePerms" parameterType="com.bcht.axletempmonitor.vo.UserVo">
+        insert into bch_role_permission(roleid,permid) values
+        <choose>
+            <when test="permids!=null">
+                <foreach collection="permids" item="item" separator=",">
+                    ( #{roleid},#{item})
+                </foreach>
+            </when>
+            <when test="updpermids!=null">
+                <foreach collection="updpermids" item="upditem" separator=",">
+                    ( #{roleid},#{upditem})
+                </foreach>
+            </when>
+            <otherwise></otherwise>
+        </choose>
+    </insert>
+<!--根据id查角色-->
+    <select id="getRoleById" parameterType="com.bcht.axletempmonitor.vo.UserVo" resultMap="roleResultMap">
+      select role.roleid,role.rolename,role.roledesc,perms.permid,perms.roleid from bch_roleinfo role,bch_role_permission perms
+      where role.roleid=perms.roleid and role.roleid=#{roleid}
+    </select>
+    <!--角色修改-->
+    <update id="updRole" parameterType="com.bcht.axletempmonitor.vo.UserVo">
+        update bch_roleinfo
+        <trim prefix="set" suffixOverrides=",">
+            <if test="rolename!=null">rolename=#{rolename},</if>
+            <if test="roledesc!=null">roledesc=#{roledesc},</if>
+        </trim>
+        where roleid=#{roleid}
+    </update>
+    <!--<update id="updRolePerms" parameterType="com.bcht.axletempmonitor.vo.UserVo">
+       <if test="updpermids!=null">
+           <foreach collection="updpermids" item="item" separator=";">
+               update bch_role_permission
+               set permid=#{item.new}
+               where roleid=#{roleid} and permid=#{item.old}
+           </foreach>
+       </if>
+    </update>-->
+    <!-- 删除角色 -->
+    <delete id="delRole" parameterType="com.bcht.axletempmonitor.vo.UserVo">
+        delete from bch_user_role where roleid=#{roleid};
+        delete from bch_role_permission where roleid=#{roleid};
+        delete from bch_roleinfo where roleid=#{roleid};
+    </delete>
+    <delete id="delRolePerms" parameterType="com.bcht.axletempmonitor.vo.UserVo">
+        delete from bch_role_permission where roleid=#{roleid}
+        <if test="delpermids!=null">
+            and permid in
+            <foreach collection="delpermids" item="delitem" open="(" separator="," close=")">
+                #{delitem}
+            </foreach>
+        </if>
+    </delete>
+
+    <!-- 查所有权限 -->
+    <select id="queryPermission" resultMap="permissionResultMap">
+        select permid,permname,parentid,parentids,resourcetype,resourceurl,permissions,permdesc from bch_permission
+    </select>
+    <!--根据权限id查权限信息-->
+    <select id="getPermissionInfo" parameterType="java.lang.Integer" resultMap="permissionResultMap">
+        select permid,permname,parentid,parentids,resourcetype,resourceurl,permissions,permdesc from bch_permission where permid=#{permid}
+    </select>
+
+</mapper>
+
+

@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bcht.axletempmonitor.mapper.BrkdwnMapper" >
+   <!--故障信息表-->
+    <resultMap id="brkdwnResultMap" type="com.bcht.axletempmonitor.pojo.BchBreakdownInfo" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="trnnum" property="trnnum" jdbcType="VARCHAR" />
+        <result column="carrnum" property="carrnum" jdbcType="INTEGER" />
+        <result column="sensormainfrm" property="sensormainfrm" jdbcType="VARCHAR" />
+        <result column="sensorcategory" property="sensorcategory" jdbcType="VARCHAR" />
+        <result column="trnattach" property="trnattach" jdbcType="VARCHAR" />
+        <result column="brkdwntime" property="brkdwntime" jdbcType="TIMESTAMP" />
+        <result column="brkdwncode" property="brkdwncode" jdbcType="VARCHAR" />
+        <result column="brkdwnname" property="brkdwnname" jdbcType="VARCHAR" />
+        <result column="brkdwnlvl" property="brkdwnlvl" jdbcType="VARCHAR" />
+        <result column="brkdwndesc" property="brkdwndesc" jdbcType="VARCHAR" />
+        <result column="brkdwntype" property="brkdwntype" jdbcType="VARCHAR" />
+        <result column="brkdwnadd" property="brkdwnanaly" jdbcType="VARCHAR" />
+        <result column="brkdwncause" property="brkdwncause" jdbcType="VARCHAR" />
+        <result column="brkdwnassign" property="brkdwnassign" jdbcType="VARCHAR" />
+        <result column="brkdwnsts" property="brkdwnsts" jdbcType="VARCHAR" />
+        <result column="brkdwnslvtime" property="brkdwnslvtime" jdbcType="TIMESTAMP" />
+        <result column="brkdwnslvrmk" property="brkdwnslvrmk" jdbcType="VARCHAR" />
+        <result column="brkdwnslvpers" property="brkdwnslvpers" jdbcType="VARCHAR" />
+        <result column="brkdwnclstime" property="brkdwnclstime" jdbcType="TIMESTAMP" />
+        <result column="brkdwnclsrmk" property="brkdwnclsrmk" jdbcType="VARCHAR" />
+        <result column="brkdwnclspers" property="brkdwnclspers" jdbcType="VARCHAR" />
+        <result column="brkdwnactitime" property="brkdwnactitime" jdbcType="TIMESTAMP" />
+        <result column="brkdwnactirmk" property="brkdwnactirmk" jdbcType="VARCHAR" />
+        <!-- 故障与维修 一对多 关系 -->
+        <collection property="maintainList" resultMap="maintainResultMap">
+        </collection>
+    </resultMap>
+    <!-- 维修表 -->
+    <resultMap id="maintainResultMap" type="com.bcht.axletempmonitor.pojo.BchBreakdownMaintain">
+        <id column="mid" property="mid" jdbcType="INTEGER" />
+       <!-- <result column="trnnum" property="trnnum" jdbcType="VARCHAR" />
+        <result column="carrnum" property="carrnum" jdbcType="INTEGER" />
+        <result column="sensormainfrm" property="sensormainfrm" jdbcType="VARCHAR" />
+        <result column="sensorcategory" property="sensorcategory" jdbcType="VARCHAR" />-->
+        <result column="maintainpers" property="maintainpers" jdbcType="VARCHAR" />
+        <result column="maintaintime" property="maintaintime" jdbcType="TIMESTAMP" />
+        <result column="maintainmethd" property="maintainmethd" jdbcType="VARCHAR" />
+        <result column="brkdwndevname" property="brkdwndevname" jdbcType="VARCHAR" />
+        <result column="brkdwndevcnum" property="brkdwndevcnum" jdbcType="VARCHAR" />
+        <result column="newdevcnum" property="newdevcnum" jdbcType="VARCHAR" />
+        <result column="oldsoftvers" property="oldsoftvers" jdbcType="VARCHAR" />
+        <result column="newsoftvers" property="newsoftvers" jdbcType="VARCHAR" />
+        <result column="detailmethd" property="detailmethd" jdbcType="VARCHAR" />
+        <result column="fileid" property="fileid" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="INTEGER" />
+    </resultMap>
+    <!-- 故障代码结果集 -->
+    <resultMap id="brkdwnCodeResultMap" type="com.bcht.axletempmonitor.pojo.BchBreakdownCode">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="brkdwncode" property="brkdwncode" jdbcType="VARCHAR" />
+        <result column="brkdwnname" property="brkdwnname" jdbcType="VARCHAR" />
+        <result column="brkdwnlvl" property="brkdwnlvl" jdbcType="VARCHAR" />
+        <result column="brkdwncause" property="brkdwncause" jdbcType="VARCHAR" />
+        <result column="brkdwntrntype" property="brkdwntrntype" jdbcType="VARCHAR" />
+        <result column="brkdwnsys" property="brkdwnsys" jdbcType="VARCHAR" />
+        <result column="addtime" property="addtime" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <sql id="brkdwnFieldName">
+      <trim suffixOverrides=",">
+          <if test="trnnum!=null">trnnum,</if>
+          <if test="carrnum!=null">carrnum,</if>
+          <if test="sensormainfrm!=null">sensormainfrm,</if>
+          <if test="sensorcategory!=null">sensorcategory,</if>
+          <if test="trnattach!=null">trnattach,</if>
+          <if test="brkdwntime!=null">brkdwntime,</if>
+          <if test="brkdwncode!=null">brkdwncode,</if>
+          <if test="brkdwnname!=null">brkdwnname,</if>
+          <if test="brkdwndesc!=null">brkdwndesc,</if>
+          <if test="brkdwntype!=null">brkdwntype,</if>
+          <if test="brkdwncause!=null">brkdwncause,</if>
+          <if test="causeassign!=null">brkdwnassign,</if>
+          <if test="brkdwnadd!=null">brkdwnadd,</if>
+          <if test="brkdwnanaly!=null">brkdwnanaly,</if>
+      </trim>
+    </sql>
+    <sql id="brkdwnFieldValue">
+        <trim suffixOverrides=",">
+            <if test="trnnum!=null">#{trnnum},</if>
+            <if test="carrnum!=null">#{carrnum},</if>
+            <if test="sensormainfrm!=null">#{sensormainfrm},</if>
+            <if test="sensorcategory!=null">#{sensorcategory},</if>
+            <if test="trnattach!=null">#{trnattach},</if>
+            <if test="brkdwntime!=null">#{brkdwntime},</if>
+            <if test="brkdwncode!=null">#{brkdwncode},</if>
+            <if test="brkdwnname!=null">#{brkdwnname},</if>
+            <if test="brkdwndesc!=null">#{brkdwndesc},</if>
+            <if test="brkdwntype!=null">#{brkdwntype},</if>
+            <if test="brkdwncause!=null">#{brkdwncause},</if>
+            <if test="causeassign!=null">#{brkdwnassign},</if>
+            <if test="brkdwnadd!=null">#{brkdwnadd},</if>
+            <if test="brkdwnanaly!=null">#{brkdwnanaly},</if>
+        </trim>
+    </sql>
+
+    <!-- 添加故障 -->
+   <insert id="addBrkdwn" parameterType="com.bcht.axletempmonitor.vo.BrkdwnVo" >
+       <selectKey keyProperty="id" resultType="int" order="AFTER">
+           SELECT LAST_INSERT_ID()
+       </selectKey>
+      insert into bch_breakdown_info(<include refid="brkdwnFieldName"/>,brkdwnsts) values(<include refid="brkdwnFieldValue"/>,"01")
+    </insert>
+
+    <!--添加故障维修记录-->
+    <insert id="addBrkdwnMaintain" parameterType="com.bcht.axletempmonitor.vo.BrkdwnVo">
+        insert into bch_breakdown_maintain(maintainpers,maintaintime,maintainmethd,brkdwndevname,
+        brkdwndevcnum,newdevcnum,oldsoftvers,newsoftvers,detailmethd,fileid,id) values
+        <foreach collection="maintains" item="mt" separator=",">
+            ( #{mt.maintainpers},#{mt.maintaintime},#{mt.maintainmethd},#{mt.brkdwndevname},
+            #{mt.brkdwndevcnum},#{mt.newdevcnum},#{mt.oldsoftvers},#{mt.newsoftvers},#{mt.detailmethd},#{mt.fileid},#{mt.id} )
+        </foreach>
+    </insert>
+
+
+    <!--查故障与维修信息-->
+    <select id="queryBrkdwnInfo" parameterType="com.bcht.axletempmonitor.vo.BrkdwnVo" resultMap="brkdwnResultMap">
+      select brkdwn.id
+        <choose>
+            <when test="iflistItem!=null">
+              <trim prefix="," suffixOverrides=",">
+                  maintn.mid,
+                  <if test="trnnumitem!=null">brkdwn.trnnum,</if>
+                  <if test="carrnumitem!=null">brkdwn.carrnum,</if>
+                  <if test="sensormainfrmitem!=null">brkdwn.sensormainfrm,</if>
+                  <if test="sensorcategoryitem!=null">brkdwn.sensorcategory,</if>
+                  <if test="trnattachitem!=null">brkdwn.trnattach,</if>
+                  <if test="brkdwnnameitem!=null">brkdwn.brkdwnname,</if>
+                  <if test="brkdwntypeitem!=null">brkdwn.brkdwntype,</if>
+                  <if test="brkdwntimeitem!=null">brkdwn.brkdwntime,</if>
+                  <if test="brkdwncodeitem!=null">brkdwn.brkdwncode,</if>
+                  <if test="brkdwnlvlitem!=null">brkdwn.brkdwnlvl,</if>
+                  <if test="brkdwndescitem!=null">brkdwn.brkdwndesc,</if>
+                  <if test="brkdwnanalyitem!=null">brkdwn.brkdwnanaly,</if>
+                  <if test="brkdwncauseitem!=null">brkdwn.brkdwncause,</if>
+                  <if test="maintaintimeitem!=null">maintn.maintaintime,</if>
+                  <if test="maintainmethditem!=null">maintn.maintainmethd,</if>
+                  <if test="maintainpersitem!=null">maintn.maintainpers,</if>
+                  <if test="brkdwnslvtimeitem!=null">brkdwn.brkdwnslvtime,</if>
+                  <if test="brkdwnslvpersitem!=null">brkdwn.brkdwnslvpers,</if>
+                  <if test="brkdwnclstimeitem!=null">brkdwn.brkdwnclstime,</if>
+                  <if test="brkdwnclspersitem!=null">brkdwn.brkdwnclspers,</if>
+                  <if test="brkdwnstsitem!=null">brkdwn.brkdwnsts,</if>
+                  <if test="brkdwnassignitem!=null">brkdwn.brkdwnassign,</if>
+              </trim>
+            </when>
+            <otherwise>
+                ,brkdwn.trnnum,brkdwn.carrnum,brkdwn.trnattach,brkdwn.sensorcategory,brkdwn.sensormainfrm,brkdwn.brkdwntime,brkdwn.brkdwncode,brkdwn.brkdwnname,
+                brkdwn.brkdwnlvl,brkdwn.brkdwndesc,brkdwn.brkdwntype,brkdwn.brkdwnanaly,brkdwn.brkdwncause,brkdwn.brkdwnassign,brkdwn.brkdwnsts,brkdwn.brkdwnslvtime,
+                brkdwn.brkdwnslvpers,brkdwn.brkdwnclstime,brkdwn.brkdwnclspers,maintn.mid,maintn.maintaintime,maintn.maintainpers,maintn.maintainmethd
+            </otherwise>
+        </choose>
+      from bch_breakdown_info brkdwn left join bch_breakdown_maintain maintn on brkdwn.id=maintn.id
+        where brkdwn.trnnum=#{trnnum} and brkdwn.brkdwntype=#{brkdwntype} and brkdwn.brkdwntime &gt;=#{starttime} and brkdwn.brkdwntime &lt;=#{endtime}
+        <choose>
+            <when test="exportSelected!=null and exportSelected==01">
+                /*查询选中的记录*/
+                <if test="selectids!=null">
+                    and brkdwn.id in
+                    <foreach collection="selectids" item="item" open="(" separator="," close =")">
+                        #{item}
+                    </foreach>
+                </if>
+            </when>
+            <otherwise> </otherwise>
+        </choose>
+        <if test="brkdwnsts!=null and brkdwnsts!=05">
+            and brkdwnsts=#{brkdwnsts}
+        </if>
+        <if test="brkdwnassign!=null">
+            and brkdwnassign=#{brkdwnassign}
+        </if>
+        ORDER BY brkdwn.brkdwntime desc
+    </select>
+
+    <!-- 通过id 查故障信息 -->
+    <select id="getBrkdwnInfoById" parameterType="java.lang.Integer" resultMap="brkdwnResultMap">
+      select brkdwn.id,brkdwn.trnnum,brkdwn.carrnum,brkdwn.trnattach,brkdwn.sensorcategory,brkdwn.sensormainfrm,brkdwn.brkdwntime,brkdwn.brkdwncode,
+      brkdwn.brkdwnname,brkdwn.brkdwnlvl,brkdwn.brkdwndesc,brkdwn.brkdwntype,brkdwn.brkdwnanaly,brkdwn.brkdwncause,brkdwn.brkdwnassign,brkdwn.brkdwnsts,
+      brkdwn.brkdwnslvtime,brkdwnslvrmk,brkdwn.brkdwnslvpers,brkdwn.brkdwnclstime,brkdwnclsrmk,brkdwn.brkdwnclspers,brkdwnactitime,brkdwnactirmk,
+      maintn.mid,maintn.maintaintime,maintn.maintainpers,maintn.maintainmethd,maintn.detailmethd,maintn.brkdwndevname,maintn.brkdwndevcnum,
+      maintn.newdevcnum,maintn.oldsoftvers,maintn.newsoftvers,maintn.fileid  from bch_breakdown_info brkdwn
+      left join bch_breakdown_maintain maintn on brkdwn.id=maintn.id  where brkdwn.id=#{id}
+    </select>
+
+    <!-- 故障指派 -->
+    <update id="brkdwnAssign" parameterType="com.bcht.axletempmonitor.vo.BrkdwnVo">
+      <if test="brkdwnassign!=null">
+          update bch_breakdown_info
+          set  brkdwnassign=#{brkdwnassign}
+          where id=#{id}
+      </if>
+    </update>
+
+    <!-- 添加故障原因分析 -->
+    <update id="addBrkdwnCause" parameterType="com.bcht.axletempmonitor.vo.BrkdwnVo">
+      update bch_breakdown_info set brkdwntype=#{brkdwntype},brkdwncause=#{brkdwncause}
+      <if test="causeassign!=null">
+       ,brkdwnassign=#{causeassign}
+      </if> where id=#{id}
+    </update>
+
+    <!-- 故障解决 -->
+    <update id="updBrkdwnSolve" parameterType="com.bcht.axletempmonitor.vo.BrkdwnVo">
+        update bch_breakdown_info
+        <trim prefix="set" suffixOverrides=",">
+            brkdwnsts="02",
+            <if test="brkdwnslvtime!=null">brkdwnslvtime=#{brkdwnslvtime},</if>
+            <if test="brkdwnslvrmk!=null">brkdwnslvrmk=#{brkdwnslvrmk},</if>
+            <if test="brkdwnassign!=null">brkdwnassign=#{brkdwnassign},</if>
+            <if test="brkdwnslvpers!=null">brkdwnslvpers=#{brkdwnslvpers},</if>
+        </trim>
+        where id=#{id}
+    </update>
+    <!-- 故障关闭 -->
+    <update id="updBrkdwnClose" parameterType="com.bcht.axletempmonitor.vo.BrkdwnVo">
+        update bch_breakdown_info
+        <trim prefix="set" suffixOverrides=",">
+            brkdwnsts="03",
+            <if test="brkdwnclstime!=null">brkdwnclstime=#{brkdwnclstime},</if>
+            <if test="brkdwnclsrmk!=null">brkdwnclsrmk=#{brkdwnclsrmk},</if>
+            <if test="brkdwnclspers!=null">brkdwnclspers=#{brkdwnclspers},</if>
+        </trim>
+        where id=#{id}
+    </update>
+    <!-- 故障激活 -->
+    <update id="updBrkdwnActive" parameterType="com.bcht.axletempmonitor.vo.BrkdwnVo">
+        update bch_breakdown_info
+        <trim prefix="set" suffixOverrides=",">
+            brkdwnsts="01",
+            <if test="brkdwnactitime!=null">brkdwnactitime=#{brkdwnactitime},</if>
+            <if test="brkdwnactirmk!=null">brkdwnactirmk=#{brkdwnactirmk},</if>
+        </trim>
+        where id=#{id}
+    </update>
+    <!-- 故障信息修改 -->
+    <update id="updBrkdwnInfoById" parameterType="com.bcht.axletempmonitor.vo.BrkdwnVo">
+        update bch_breakdown_info
+        <trim prefix="set" suffixOverrides=",">
+            <if test="trnnum!=null">trnnum=#{trnnum},</if>
+            <if test="carrnum!=null">carrnum=#{carrnum},</if>
+            <if test="sensormainfrm">sensormainfrm=#{sensormainfrm},</if>
+            <if test="sensorcategory">sensorcategory=#{sensorcategory},</if>
+            <if test="brkdwntime!=null">brkdwntime=#{brkdwntime},</if>
+            <if test="brkdwncode!=null">brkdwncode=#{brkdwncode},</if>
+            <if test="brkdwnname!=null">brkdwnname=#{brkdwnname},</if>
+            <if test="brkdwndesc!=null">brkdwndesc=#{brkdwndesc},</if>
+            <if test="brkdwntype!=null">brkdwntype=#{brkdwntype},</if>
+            <if test="brkdwncause!=null">brkdwncause=#{brkdwncause},</if>
+            <if test="causeassign!=null">brkdwnassign=#{brkdwnassign},</if>
+            <if test="brkdwnadd!=null">brkdwnadd=#{brkdwnadd},</if>
+            <if test="brkdwnanaly!=null">brkdwnanaly=#{brkdwnanaly},</if>
+        </trim>
+        where id=#{id}
+    </update>
+
+    <!-- 维修记录修改 -->
+    <update id="updMaintainInfoById" parameterType="com.bcht.axletempmonitor.vo.BrkdwnVo">
+        <foreach collection="updmaintains" item="mt" separator=";">
+            update bch_breakdown_maintain
+            <trim prefix="set" suffixOverrides=",">
+               <!-- <if test="mt.trnnum!=null">trnnum=#{mt.trnnum},</if>
+                <if test="mt.carrnum!=null">carrnum=#{mt.carrnum},</if>
+                <if test="mt.sensormainfrm">sensormainfrm=#{mt.sensormainfrm},</if>
+                <if test="mt.sensorcategory">sensorcategory=#{mt.sensorcategory},</if>-->
+                <if test="mt.maintaintime!=null">maintaintime=#{mt.maintaintime},</if>
+                <if test="mt.maintainmethd!=null">maintainmethd=#{mt.maintainmethd},</if>
+                <if test="mt.maintainpers!=null">maintainpers=#{mt.maintainpers},</if>
+                <if test="mt.brkdwndevname!=null">brkdwndevname=#{mt.brkdwndevname},</if>
+                <if test="mt.brkdwndevcnum!=null">brkdwndevcnum=#{mt.brkdwndevcnum},</if>
+                <if test="mt.newdevcnum!=null">newdevcnum=#{mt.newdevcnum},</if>
+                <if test="mt.oldsoftvers!=null">oldsoftvers=#{mt.oldsoftvers},</if>
+                <if test="mt.newsoftvers!=null">newsoftvers=#{mt.newsoftvers},</if>
+                <if test="mt.detailmethd!=null">detailmethd=#{mt.detailmethd},</if>
+                <if test="mt.fileid!=null">fileid=#{mt.fileid},</if>
+            </trim>
+            where mid=#{mt.mid}
+        </foreach>
+    </update>
+    <!-- 删除故障信息 -->
+    <delete id="delBrkdwnInfoBatch" parameterType="com.bcht.axletempmonitor.vo.BrkdwnVo">
+        delete from bch_breakdown_info where id in
+        <foreach collection="selectids" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+    <!--  删除故障信息同时 删除 维修记录 -->
+    <delete id="delMatainInfoBatch" parameterType="com.bcht.axletempmonitor.vo.BrkdwnVo">
+        delete from bch_breakdown_maintain where id in
+        <foreach collection="selectids" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--添加故障代码-->
+    <insert id="insertBrkdwnCode" parameterType="com.bcht.axletempmonitor.vo.BrkdwnVo">
+        insert into bch_breakdown_code(brkdwncode,brkdwnname,brkdwnlvl,brkdwncause,brkdwntrntype,brkdwnsys,addtime)
+        values (#{brkdwncode},#{brkdwnname},#{brkdwnlvl},#{brkdwncause},#{brkdwntrntype},#{brkdwnsys},NOW())
+    </insert>
+    <!--查故障代码-->
+    <select id="queryBrkdwnCode" parameterType="com.bcht.axletempmonitor.vo.BrkdwnVo" resultMap="brkdwnCodeResultMap">
+        select id
+        <choose>
+            <when test="iflistItem!=null">
+                <trim prefix="," suffixOverrides=",">
+                    <if test="brkdwncodeitem!=null">brkdwncode,</if>
+                    <if test="brkdwnnameitem!=null">brkdwnname,</if>
+                    <if test="brkdwnlvlitem!=null">brkdwnlvl,</if>
+                    <if test="brkdwncauseitem!=null">brkdwncause,</if>
+                    <if test="brkdwntrntypeitem!=null">brkdwntrntype,</if>
+                    <if test="brkdwnsysitem!=null">brkdwnsys,</if>
+                </trim>
+            </when>
+            <otherwise>,brkdwncode,brkdwnname,brkdwnlvl,brkdwncause,brkdwntrntype,brkdwnsys,addtime</otherwise>
+        </choose>
+         from bch_breakdown_code  where 1=1
+      <choose>
+          <when test="brkdwncode!=null">and brkdwncode like "%"#{brkdwncode}"%"</when>
+          <when test="brkdwnname!=null">and brkdwnname like "%"#{brkdwnname}"%"</when>
+          <otherwise></otherwise>
+      </choose>
+        <choose>
+            <when test="exportSelected!=null and exportSelected==01">
+                /*查询选中的记录*/
+                <if test="selectids!=null">
+                    and id in
+                    <foreach collection="selectids" item="item" open="(" separator="," close =")">
+                        #{item}
+                    </foreach>
+                </if>
+            </when>
+            <otherwise> </otherwise>
+        </choose>
+        <if test="brkdwntrntype!=null">
+           and brkdwntrntype=#{brkdwntrntype}
+        </if>
+        <if test="brkdwnlvl!=null">
+          and  brkdwnlvl=#{brkdwnlvl}
+        </if>
+        order by addtime
+    </select>
+    <!--根据id查故障代码-->
+    <select id="queryBrkdwnCodeById" parameterType="com.bcht.axletempmonitor.vo.BrkdwnVo" resultMap="brkdwnCodeResultMap">
+        select id,brkdwncode,brkdwnname,brkdwnlvl,brkdwncause,brkdwntrntype,brkdwnsys,addtime from bch_breakdown_code where id=#{id}
+    </select>
+    <!--故障代码修改-->
+    <update id="updBrkdwnCode" parameterType="com.bcht.axletempmonitor.vo.BrkdwnVo">
+        update bch_breakdown_code
+        <trim prefix="set" suffixOverrides=",">
+            <if test="brkdwncode!=null">brkdwncode=#{brkdwncode},</if>
+            <if test="brkdwnlvl!=null">brkdwnlvl=#{brkdwnlvl},</if>
+            <if test="brkdwnname!=null">brkdwnname=#{brkdwnname},</if>
+            <if test="brkdwntrntype!=null">brkdwntrntype=#{brkdwntrntype},</if>
+            <if test="brkdwnsys!=null">brkdwnsys=#{brkdwnsys},</if>
+            <if test="brkdwncause!=null">brkdwncause=#{brkdwncause},</if>
+        </trim>
+        where id=#{id}
+    </update>
+    <!-- 删除故障代码 -->
+    <delete id="delBrkdwnCode" parameterType="com.bcht.axletempmonitor.vo.BrkdwnVo">
+        delete from bch_breakdown_code where
+        <choose>
+            <when test="id!=null">
+                id=#{id}
+            </when>
+            <when test="selectids!=null">
+                id in
+                <foreach collection="selectids" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </when>
+            <otherwise></otherwise>
+        </choose>
+    </delete>
+
+</mapper>
+
+

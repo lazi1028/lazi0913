@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bcht.axletempmonitor.mapper.TrainMapper" >
+    <!-- 列车信息表 -->
+    <resultMap id="trainResultMap" type="com.bcht.axletempmonitor.pojo.BchTraininfo" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="trnnum" property="trnnum" jdbcType="VARCHAR" />
+        <result column="trntype" property="trntype" jdbcType="VARCHAR" />
+        <result column="trnattach" property="trnattach" jdbcType="VARCHAR" />
+        <result column="trnsupplier" property="trnsupplier" jdbcType="VARCHAR" />
+        <!-- 列车 车厢 一对多关系 -->
+        <collection property="carriageList" resultMap="carriageResultMap">
+        </collection>
+    </resultMap>
+    <!-- 车厢表 -->
+    <resultMap id="carriageResultMap" type="com.bcht.axletempmonitor.pojo.BchTraincarriage">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="trnnum" property="trnnum" jdbcType="VARCHAR" />
+        <result column="carrnum" property="carrnum" jdbcType="INTEGER" />
+        <result column="sensormainfrm" property="sensormainfrm" jdbcType="VARCHAR" />
+        <result column="carrtype" property="carrtype" jdbcType="VARCHAR" />
+        <result column="sensorcategory" property="sensorcategory" jdbcType="VARCHAR" />
+    </resultMap>
+    <!--传感器温度表-->
+    <resultMap id="sensorTmpResultMap" type="com.bcht.axletempmonitor.pojo.BchSensorTemperature">
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="trnnum" property="trnnum" jdbcType="VARCHAR" />
+        <result column="carrnum" property="carrnum" jdbcType="INTEGER" />
+        <result column="sensormainfrm" property="sensormainfrm" jdbcType="VARCHAR" />
+        <result column="datatime1" property="datatime1" jdbcType="TIMESTAMP" />
+        <result column="ab1tmp" property="ab1tmp" jdbcType="VARCHAR" />
+        <result column="ab2tmp" property="ab2tmp" jdbcType="VARCHAR" />
+        <result column="ab3tmp" property="ab3tmp" jdbcType="VARCHAR" />
+        <result column="ab4tmp" property="ab4tmp" jdbcType="VARCHAR" />
+        <result column="ab5tmp" property="ab5tmp" jdbcType="VARCHAR" />
+        <result column="ab6tmp" property="ab6tmp" jdbcType="VARCHAR" />
+        <result column="ab7tmp" property="ab7tmp" jdbcType="VARCHAR" />
+        <result column="ab8tmp" property="ab8tmp" jdbcType="VARCHAR" />
+        <result column="pemb1tmp" property="pemb1tmp" jdbcType="VARCHAR" />
+        <result column="pemb2tmp" property="pemb2tmp" jdbcType="VARCHAR" />
+        <result column="pemb3tmp" property="pemb3tmp" jdbcType="VARCHAR" />
+        <result column="pemb4tmp" property="pemb4tmp" jdbcType="VARCHAR" />
+        <result column="pcwb1tmp" property="pcwb1tmp" jdbcType="VARCHAR" />
+        <result column="pcwb2tmp" property="pcwb2tmp" jdbcType="VARCHAR" />
+        <result column="pcwb3tmp" property="pcwb3tmp" jdbcType="VARCHAR" />
+        <result column="pcwb4tmp" property="pcwb4tmp" jdbcType="VARCHAR" />
+        <result column="gemb1tmp" property="gemb1tmp" jdbcType="VARCHAR" />
+        <result column="gemb2tmp" property="gemb2tmp" jdbcType="VARCHAR" />
+        <result column="gemb3tmp" property="gemb3tmp" jdbcType="VARCHAR" />
+        <result column="gemb4tmp" property="gemb4tmp" jdbcType="VARCHAR" />
+        <result column="gcwb1tmp" property="gcwb1tmp" jdbcType="VARCHAR" />
+        <result column="gcwb2tmp" property="gcwb2tmp" jdbcType="VARCHAR" />
+        <result column="gcwb3tmp" property="gcwb3tmp" jdbcType="VARCHAR" />
+        <result column="gcwb4tmp" property="gcwb4tmp" jdbcType="VARCHAR" />
+        <result column="ems1tmp" property="ems1tmp" jdbcType="VARCHAR" />
+        <result column="ems2tmp" property="ems2tmp" jdbcType="VARCHAR" />
+        <result column="ems3tmp" property="ems3tmp" jdbcType="VARCHAR" />
+        <result column="ems4tmp" property="ems4tmp" jdbcType="VARCHAR" />
+        <result column="emtb1tmp" property="emtb1tmp" jdbcType="VARCHAR" />
+        <result column="emtb2tmp" property="emtb2tmp" jdbcType="VARCHAR" />
+        <result column="emtb3tmp" property="emtb3tmp" jdbcType="VARCHAR" />
+        <result column="emtb4tmp" property="emtb4tmp" jdbcType="VARCHAR" />
+        <result column="emntb1tmp" property="emntb1tmp" jdbcType="VARCHAR" />
+        <result column="emntb2tmp" property="emntb2tmp" jdbcType="VARCHAR" />
+        <result column="emntb3tmp" property="emntb3tmp" jdbcType="VARCHAR" />
+        <result column="emntb4tmp" property="emntb4tmp" jdbcType="VARCHAR" />
+        <result column="sensor37tmp" property="sensor37tmp" jdbcType="VARCHAR" />
+        <result column="sensor38tmp" property="sensor38tmp" jdbcType="VARCHAR" />
+        <result column="sensor39tmp" property="sensor39tmp" jdbcType="VARCHAR" />
+        <result column="sensor40tmp" property="sensor40tmp" jdbcType="VARCHAR" />
+        <result column="sensor41tmp" property="sensor41tmp" jdbcType="VARCHAR" />
+        <result column="sensor42tmp" property="sensor42tmp" jdbcType="VARCHAR" />
+        <result column="sensor43tmp" property="sensor43tmp" jdbcType="VARCHAR" />
+        <result column="sensor44tmp" property="sensor44tmp" jdbcType="VARCHAR" />
+        <result column="sensor45tmp" property="sensor45tmp" jdbcType="VARCHAR" />
+        <result column="sensor46tmp" property="sensor46tmp" jdbcType="VARCHAR" />
+        <result column="sensor47tmp" property="sensor47tmp" jdbcType="VARCHAR" />
+        <result column="sensor48tmp" property="sensor48tmp" jdbcType="VARCHAR" />
+        <association property="sensorStatus" resultMap="sensorStsResultMap">
+        </association>
+    </resultMap>
+    <!--传感器状态表-->
+    <resultMap id="sensorStsResultMap" type="com.bcht.axletempmonitor.pojo.BchSensorStatus">
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="trnnum" property="trnnum" jdbcType="VARCHAR" />
+        <result column="carrnum" property="carrnum" jdbcType="INTEGER" />
+        <result column="sensormainfrm" property="sensormainfrm" jdbcType="VARCHAR" />
+        <result column="datatime1" property="datatime1" jdbcType="TIMESTAMP" />
+        <result column="ab1sts" property="ab1sts" jdbcType="VARCHAR" />
+        <result column="ab2sts" property="ab2sts" jdbcType="VARCHAR" />
+        <result column="ab3sts" property="ab3sts" jdbcType="VARCHAR" />
+        <result column="ab4sts" property="ab4sts" jdbcType="VARCHAR" />
+        <result column="ab5sts" property="ab5sts" jdbcType="VARCHAR" />
+        <result column="ab6tmp" property="ab6sts" jdbcType="VARCHAR" />
+        <result column="ab7tmp" property="ab7sts" jdbcType="VARCHAR" />
+        <result column="ab8tmp" property="ab8sts" jdbcType="VARCHAR" />
+        <result column="pemb1sts" property="pemb1sts" jdbcType="VARCHAR" />
+        <result column="pemb2sts" property="pemb2sts" jdbcType="VARCHAR" />
+        <result column="pemb3sts" property="pemb3sts" jdbcType="VARCHAR" />
+        <result column="pemb4sts" property="pemb4sts" jdbcType="VARCHAR" />
+        <result column="pcwb1sts" property="pcwb1sts" jdbcType="VARCHAR" />
+        <result column="pcwb2sts" property="pcwb2sts" jdbcType="VARCHAR" />
+        <result column="pcwb3sts" property="pcwb3sts" jdbcType="VARCHAR" />
+        <result column="pcwb4sts" property="pcwb4sts" jdbcType="VARCHAR" />
+        <result column="gemb1sts" property="gemb1sts" jdbcType="VARCHAR" />
+        <result column="gemb2sts" property="gemb2sts" jdbcType="VARCHAR" />
+        <result column="gemb3sts" property="gemb3sts" jdbcType="VARCHAR" />
+        <result column="gemb4sts" property="gemb4sts" jdbcType="VARCHAR" />
+        <result column="gcwb1sts" property="gcwb1sts" jdbcType="VARCHAR" />
+        <result column="gcwb2sts" property="gcwb2sts" jdbcType="VARCHAR" />
+        <result column="gcwb3sts" property="gcwb3sts" jdbcType="VARCHAR" />
+        <result column="gcwb4sts" property="gcwb4sts" jdbcType="VARCHAR" />
+        <result column="ems1sts" property="ems1sts" jdbcType="VARCHAR" />
+        <result column="ems2sts" property="ems2sts" jdbcType="VARCHAR" />
+        <result column="ems3sts" property="ems3sts" jdbcType="VARCHAR" />
+        <result column="ems4sts" property="ems4sts" jdbcType="VARCHAR" />
+        <result column="emtb1sts" property="emtb1sts" jdbcType="VARCHAR" />
+        <result column="emtb2sts" property="emtb2sts" jdbcType="VARCHAR" />
+        <result column="emtb3sts" property="emtb3sts" jdbcType="VARCHAR" />
+        <result column="emtb4sts" property="emtb4sts" jdbcType="VARCHAR" />
+        <result column="emntb1sts" property="emntb1sts" jdbcType="VARCHAR" />
+        <result column="emntb2sts" property="emntb2sts" jdbcType="VARCHAR" />
+        <result column="emntb3sts" property="emntb3sts" jdbcType="VARCHAR" />
+        <result column="emntb4sts" property="emntb4sts" jdbcType="VARCHAR" />
+        <result column="sensor37sts" property="sensor37sts" jdbcType="VARCHAR" />
+        <result column="sensor38sts" property="sensor38sts" jdbcType="VARCHAR" />
+        <result column="sensor39sts" property="sensor39sts" jdbcType="VARCHAR" />
+        <result column="sensor40sts" property="sensor40sts" jdbcType="VARCHAR" />
+        <result column="sensor41sts" property="sensor41sts" jdbcType="VARCHAR" />
+        <result column="sensor42sts" property="sensor42sts" jdbcType="VARCHAR" />
+        <result column="sensor43sts" property="sensor43sts" jdbcType="VARCHAR" />
+        <result column="sensor44sts" property="sensor44sts" jdbcType="VARCHAR" />
+        <result column="sensor45sts" property="sensor45sts" jdbcType="VARCHAR" />
+        <result column="sensor46sts" property="sensor46sts" jdbcType="VARCHAR" />
+        <result column="sensor47sts" property="sensor47sts" jdbcType="VARCHAR" />
+        <result column="sensor48sts" property="sensor48sts" jdbcType="VARCHAR" />
+    </resultMap>
+    <!--传感器异常信息表-->
+    <resultMap id="sensorExcpResultMap" type="com.bcht.axletempmonitor.pojo.BchSensorException">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="trnnum" property="trnnum" jdbcType="VARCHAR" />
+        <result column="carrnum" property="carrnum" jdbcType="INTEGER" />
+        <result column="sensormainfrm" property="sensormainfrm" jdbcType="VARCHAR" />
+        <result column="excepstarttime" property="excepstarttime" jdbcType="TIMESTAMP" />
+        <result column="excependtime" property="excependtime" jdbcType="TIMESTAMP" />
+        <result column="sensorcategory" property="sensorcategory" jdbcType="VARCHAR" />
+        <result column="excepsts" property="excepsts" jdbcType="VARCHAR" />
+    </resultMap>
+    <!--  附件  -->
+    <resultMap id="fileResultMap" type="com.bcht.axletempmonitor.pojo.BchFile">
+        <id column="filesid" property="id" jdbcType="INTEGER" />
+        <result column="filename" property="filename" jdbcType="VARCHAR" />
+        <result column="filesuffix" property="filesuffix" jdbcType="VARCHAR" />
+        <result column="filepath" property="filepath" jdbcType="VARCHAR" />
+        <result column="filesize" property="filesize" jdbcType="DOUBLE" />
+    </resultMap>
+    <!-- 统计结果 -->
+    <resultMap id="statResultMap" type="com.bcht.axletempmonitor.pojo.BchExcepStat">
+        <result column="count1" property="count1" jdbcType="VARCHAR" />
+        <result column="trnnum" property="trnnum" jdbcType="VARCHAR" />
+        <result column="carrnum" property="carrnum" jdbcType="INTEGER" />
+        <result column="sensormainfrm" property="sensormainfrm" jdbcType="VARCHAR" />
+        <result column="sensorcategory" property="sensorcategory" jdbcType="VARCHAR" />
+        <result column="excepsts" property="excepsts" jdbcType="VARCHAR" />
+        <result column="brkdwntype" property="brkdwntype" jdbcType="VARCHAR" />
+        <result column="brkdwnsts" property="brkdwnsts" jdbcType="VARCHAR" />
+    </resultMap>
+    <!-- 自定义列车结果集 -->
+    <resultMap id="defineTrainResultMap" type="com.bcht.axletempmonitor.pojo.TrainResult" >
+        <result column="id" property="id" jdbcType="INTEGER" />
+        <result column="trnnum" property="trnnum" jdbcType="VARCHAR" />
+        <result column="trntype" property="trntype" jdbcType="VARCHAR" />
+        <result column="trnattach" property="trnattach" jdbcType="VARCHAR" />
+        <result column="trnsupplier" property="trnsupplier" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <!-- 根据列车编号查列车信息 -->
+    <select id="queryTrainByNum" parameterType="java.lang.String" resultMap="trainResultMap" >
+        SELECT trn.trnnum,trn.trntype,trn.trnattach,trn.trnsupplier  FROM bch_traininfo trn where trn.trnnum=#{trnnum}
+    </select>
+
+    <select id="queryTrainByNum1" parameterType="java.lang.String" resultMap="trainResultMap" >
+        SELECT trn.trnnum,trn.trntype,trn.trnattach,trn.trnsupplier,carr.carrnum,carr.carrtype,carr.sensormainfrm,carr.sensorcategory
+        FROM bch_traininfo trn,bch_traincarriage carr where trn.trnnum=carr.trnnum and trn.trnnum=#{trnnum}
+    </select>
+
+    <!-- 查 所有的列车编号 -->
+    <select id="queryTrnnumAll"  resultMap="trainResultMap" >
+        SELECT trn.trnnum,trn.trntype FROM bch_traininfo trn
+    </select>
+    <!-- 查 列车车厢 对应的传感器种类 -->
+    <select id="queryTrnSensor" resultMap="trainResultMap" >
+        SELECT trn.trnnum,trn.trntype,carr.carrnum,carr.carrtype,carr.sensormainfrm,carr.sensorcategory
+        FROM bch_traininfo trn,bch_traincarriage carr where trn.trnnum=carr.trnnum and trn.trnnum=#{trnnum} and carr.carrnum=#{carrnum}
+    </select>
+    <!-- 列车编号模糊 查询 -->
+    <select id="fuzzyQueryTrnByNum" parameterType="java.lang.String" resultMap="trainResultMap" >
+        SELECT trn.trnnum,trn.trntype FROM bch_traininfo trn WHERE trn.trnnum like "%"#{trnnum}"%"
+    </select>
+    <!-- 轴温数据 查询-->
+    <select id="querySensorTmp" parameterType="com.bcht.axletempmonitor.vo.TrainVo" resultMap="sensorTmpResultMap">
+        select tmp.trnnum,tmp.carrnum,tmp.sensormainfrm,tmp.datatime1
+        <trim prefix="," suffixOverrides=",">
+            <if test="ab1!=null">ab1tmp,ab1sts,</if>
+            <if test="ab2!=null">ab2tmp,ab2sts,</if>
+            <if test="ab3!=null">ab3tmp,ab3sts,</if>
+            <if test="ab4!=null">ab4tmp,ab4sts,</if>
+            <if test="ab5!=null">ab5tmp,ab5sts,</if>
+            <if test="ab6!=null">ab6tmp,ab6sts,</if>
+            <if test="ab7!=null">ab7tmp,ab7sts,</if>
+            <if test="ab8!=null">ab8tmp,ab8sts,</if>
+            <if test="pemb1!=null">pemb1tmp,pemb1sts,</if>
+            <if test="pemb2!=null">pemb3tmp,pemb2sts,</if>
+            <if test="pemb3!=null">pemb3tmp,pemb3sts,</if>
+            <if test="pemb4!=null">pemb4tmp,pemb4sts,</if>
+            <if test="pcwb1!=null">pcwb1tmp,pcwb1sts,</if>
+            <if test="pcwb2!=null">pcwb3tmp,pcwb2sts,</if>
+            <if test="pcwb3!=null">pcwb3tmp,pcwb3sts,</if>
+            <if test="pcwb4!=null">pcwb4tmp,pcwb4sts,</if>
+            <if test="gemb1!=null">gemb1tmp,gemb1sts,</if>
+            <if test="gemb2!=null">gemb2tmp,gemb2sts,</if>
+            <if test="gemb3!=null">gemb3tmp,gemb3sts,</if>
+            <if test="gemb4!=null">gemb4tmp,gemb4sts,</if>
+            <if test="gcwb1!=null">gcwb1tmp,gcwb1sts</if>
+            <if test="gcwb2!=null">gcwb2tmp,gcwb2sts</if>
+            <if test="gcwb3!=null">gcwb3tmp,gcwb3sts</if>
+            <if test="gcwb4!=null">gcwb4tmp,gcwb4sts</if>
+            <if test="ems1!=null">ems1tmp,ems1sts,</if>
+            <if test="ems2!=null">ems2tmp,ems2sts,</if>
+            <if test="ems3!=null">ems4tmp,ems3sts,</if>
+            <if test="ems4!=null">ems4tmp,ems4sts,</if>
+            <if test="emtb1!=null">emtb1tmp,emtb1sts,</if>
+            <if test="emtb2!=null">emtb2tmp,emtb2sts,</if>
+            <if test="emtb3!=null">emtb3tmp,emtb3sts,</if>
+            <if test="emtb4!=null">emtb4tmp,emtb4sts,</if>
+            <if test="emntb1!=null">emntb1tmp,emntb1sts,</if>
+            <if test="emntb2!=null">emntb2tmp,emntb2sts,</if>
+            <if test="emntb3!=null">emntb3tmp,emntb3sts,</if>
+            <if test="emntb4!=null">emntb4tmp,emntb4sts,</if>
+        </trim>
+        from bch_sensor_temperature tmp,bch_sensor_status sts where tmp.trnnum=sts.trnnum and tmp.carrnum=sts.carrnum
+         and tmp.sensormainfrm=sts.sensormainfrm and tmp.datatime1=sts.datatime1 and tmp.trnnum=#{trnnum} and tmp.carrnum=#{carrnum}
+        and tmp.datatime1 &gt;=#{starttime} and tmp.datatime1 &lt;= #{endtime}
+        <if test="sensormainfrm!=null">and tmp.sensormainfrm=#{sensormainfrm}</if>
+    </select>
+
+    <!-- 轴温/状态 数据 查询-->
+    <select id="querySensorTmpSts" parameterType="com.bcht.axletempmonitor.vo.TrainVo" resultMap="sensorTmpResultMap">
+        select tmp.trnnum,tmp.carrnum,tmp.sensormainfrm,tmp.datatime1,ab1tmp,ab2tmp,ab3tmp,ab4tmp,ab5tmp,ab6tmp,ab7tmp,ab8tmp,pemb1tmp,pemb2tmp,pemb3tmp,pemb4tmp,
+pcwb1tmp,pcwb2tmp,pcwb3tmp,pcwb4tmp,gemb1tmp,gemb2tmp,gemb3tmp,gemb4tmp,gcwb1tmp,gcwb2tmp,gcwb3tmp,gcwb4tmp,
+ems1tmp,ems2tmp,ems3tmp,ems4tmp,emtb1tmp,emtb2tmp,emtb3tmp,emtb4tmp,emntb1tmp,emntb2tmp,emntb3tmp,emntb4tmp,
+ab1sts,ab2sts,ab3sts,ab4sts,ab5sts,ab6sts,ab7sts,ab8sts,pemb1sts,pemb2sts,pemb3sts,pemb4sts,
+pcwb1sts,pcwb2sts,pcwb3sts,pcwb4sts,gemb1sts,gemb2sts,gemb3sts,gemb4sts,gcwb1sts,gcwb2sts,gcwb3sts,gcwb4sts,
+ems1sts,ems2sts,ems3sts,ems4sts,emtb1sts,emtb2sts,emtb3sts,emtb4sts,emntb1sts,emntb2sts,emntb3sts,emntb4sts,
+sensor37sts,sensor38sts,sensor39sts,sensor40sts,sensor41sts,sensor42sts,sensor43sts,sensor44sts,sensor45sts,
+sensor46sts,sensor47sts,sensor48sts from bch_sensor_temperature tmp,bch_sensor_status sts
+where tmp.trnnum=sts.trnnum and tmp.carrnum=sts.carrnum and tmp.sensormainfrm=sts.sensormainfrm and tmp.datatime1=sts.datatime1
+and tmp.trnnum=#{trnnum} and tmp.carrnum=#{carrnum} and tmp.datatime1 &gt;=#{starttime} and tmp.datatime1 &lt;= #{endtime}
+        <trim prefix="and" suffixOverrides="">
+            <if test="sensormainfrm!=null">tmp.sensormainfrm=#{sensormainfrm}</if>
+        </trim>
+        ORDER BY tmp.datatime1
+    </select>
+
+    <!-- 异常数据 查询-->
+    <select id="querySensorException" parameterType="com.bcht.axletempmonitor.vo.TrainVo" resultMap="sensorExcpResultMap">
+        select id
+        <choose>
+            <when test="iflistItem!=null">
+                <trim prefix="," suffixOverrides=",">
+                    <if test="trnnumitem!=null">trnnum,</if>
+                    <if test="carrnumitem!=null">carrnum,</if>
+                    <if test="sensormainfrmitem!=null">sensormainfrm,</if>
+                    <if test="sensornameitem!=null">sensorcategory,</if>
+                    <if test="excepstarttimeitem!=null">excepstarttime,</if>
+                    <if test="excependtimeitem!=null">excependtime,</if>
+                    <if test="excepstsitem!=null">excepsts,</if>
+                </trim>
+            </when>
+            <otherwise>
+                ,trnnum,carrnum,sensormainfrm,sensorcategory,excepstarttime,excependtime,excepsts
+            </otherwise>
+        </choose>
+         from bch_sensor_exception excp
+        where trnnum=#{trnnum} and excepstarttime &gt;= #{starttime} and excepstarttime &lt;= #{endtime}
+        <trim prefix="and" prefixOverrides="and" suffixOverrides="and | or">
+            <if test="sensormainfrm!=null">  sensormainfrm=#{sensormainfrm} and </if>
+        </trim>
+        <trim prefix="and" prefixOverrides="and" suffixOverrides="and | or">
+            <if test="carrnum!=null">  carrnum=#{carrnum} and  </if>
+        </trim>
+        <trim prefix="and (" prefixOverrides="and" suffixOverrides="and | or" suffix=")">
+            <if test="ab1!=null">sensorcategory='ab1' or </if>
+            <if test="ab2!=null">sensorcategory='ab2' or </if>
+            <if test="ab3!=null">sensorcategory='ab3' or</if>
+            <if test="ab4!=null">sensorcategory='ab4' or</if>
+            <if test="ab5!=null">sensorcategory='ab5' or</if>
+            <if test="ab6!=null">sensorcategory='ab6' or</if>
+            <if test="ab7!=null">sensorcategory='ab7' or</if>
+            <if test="ab8!=null">sensorcategory='ab8' or</if>
+            <if test="pemb1!=null">sensorcategory='pemb1' or</if>
+            <if test="pemb2!=null">sensorcategory='pemb2' or</if>
+            <if test="pemb3!=null">sensorcategory='pemb3' or</if>
+            <if test="pemb4!=null">sensorcategory='pemb4' or</if>
+            <if test="pcwb1!=null">sensorcategory='pcwb1' or</if>
+            <if test="pcwb2!=null">sensorcategory='pcwb2' or</if>
+            <if test="pcwb3!=null">sensorcategory='pcwb3' or</if>
+            <if test="pcwb4!=null">sensorcategory='pcwb4' or</if>
+            <if test="gemb1!=null">sensorcategory='gemb1' or</if>
+            <if test="gemb2!=null">sensorcategory='gemb2' or</if>
+            <if test="gemb3!=null">sensorcategory='gemb3' or</if>
+            <if test="gemb4!=null">sensorcategory='gemb4' or</if>
+            <if test="gcwb1!=null">sensorcategory='gcwb1' or</if>
+            <if test="gcwb2!=null">sensorcategory='gcwb2' or</if>
+            <if test="gcwb3!=null">sensorcategory='gcwb3' or</if>
+            <if test="gcwb4!=null">sensorcategory='gcwb4' or</if>
+            <if test="ems1!=null">sensorcategory='ems1' or</if>
+            <if test="ems2!=null">sensorcategory='ems2' or</if>
+            <if test="ems3!=null">sensorcategory='ems3' or</if>
+            <if test="ems4!=null">sensorcategory='ems4' or</if>
+            <if test="emtb1!=null">sensorcategory='emtb1' or</if>
+            <if test="emtb2!=null">sensorcategory='emtb2' or</if>
+            <if test="emtb3!=null">sensorcategory='emtb3' or</if>
+            <if test="emtb4!=null">sensorcategory='emtb4' or</if>
+            <if test="emntb1!=null">sensorcategory='emntb1' or</if>
+            <if test="emntb2!=null">sensorcategory='emntb2' or</if>
+            <if test="emntb3!=null">sensorcategory='emntb3' or</if>
+            <if test="emntb4!=null">sensorcategory='emntb4' or</if>
+         </trim>
+        <choose>
+            <when test="exportSelected!=null and exportSelected==01">
+                /*查询选中的选中的记录*/
+                <if test="selectids!=null">
+                and id in
+                 <foreach collection="selectids" item="item" open="(" separator="," close =")">
+                     #{item}
+                 </foreach>
+                </if>
+            </when>
+            <otherwise> </otherwise>
+        </choose>
+        <if test="excepsts!=null and excepsts!=05">
+            and excepsts=#{excepsts}
+        </if>
+        ORDER BY excepstarttime desc
+    </select>
+
+    <!-- 查询码值 -->
+    <select id="getCateValue" resultType="java.lang.String" >
+        select label from bch_catevalue where catename=#{catename} and catevalue=#{catevalue}
+    </select>
+
+    <!-- 根据id查询异常信息 -->
+    <select id="queryExcepById" parameterType="java.lang.Integer" resultMap="sensorExcpResultMap" >
+        select trnnum,carrnum,sensormainfrm,sensorcategory,excepsts,excepstarttime,excependtime from bch_sensor_exception where id=#{id}
+    </select>
+
+    <!-- 根据列车编号、车厢号、传感器主机、传感器名称查异常数据 (故障数据查看用到)  -->
+    <select id="queryBrkdwnInfo" parameterType="com.bcht.axletempmonitor.vo.TrainVo" resultMap="sensorExcpResultMap">
+        select id,trnnum,carrnum,sensormainfrm,sensorcategory,excepstarttime,excependtime,excepsts from bch_sensor_exception where trnnum=#{trnnum}
+        and carrnum=#{carrnum} and sensorcategory=#{sensorcategory} and excepstarttime=#{starttime}
+        <if test="sensormainfrm!=null">and sensormainfrm=#{sensormainfrm}</if>
+    </select>
+
+
+    <insert id="addFile" parameterType="com.bcht.axletempmonitor.pojo.BchFile">
+        <selectKey keyProperty="id" resultType="int" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into bch_file(filename,filepath,filesuffix,filesize) values(#{filename},#{filepath},#{filesuffix},#{filesize})
+    </insert>
+    <select id="getFileById" parameterType="java.lang.Integer" resultMap="fileResultMap">
+        select fileid,filename,filepath from bch_file where fileid=#{id}
+    </select>
+
+
+<sql id="Report_Stat_Condition">
+    <choose>
+        <when test="sensorlist!=null">
+            <trim prefix="and"  suffixOverrides="and">
+                <if test="trnnumlist!=null">trnnum=
+                    <foreach collection="trnnumlist" item="item" >
+                        #{item.trnnum}
+                    </foreach> and
+                </if>
+                <if test="carrnumlist!=null">carrnum=
+                    <foreach collection="carrnumlist" item="item" >
+                        #{item}
+                    </foreach> and
+                </if>
+                <if test="sensormainfrm!=null">sensormainfrm=
+                    <foreach collection="sensormainfrm" item="item" >
+                        #{item}
+                    </foreach> and
+                </if>
+                <if test="sensorlist!=null">sensorcategory in
+                    <foreach collection="sensorlist" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+            </trim>
+        </when>
+        <when test="sensormainfrm!=null">
+            <trim prefix="and" suffixOverrides="and">
+                <if test="trnnumlist!=null">trnnum=
+                    <foreach collection="trnnumlist" item="item" >
+                        #{item.trnnum}
+                    </foreach> and
+                </if>
+                <if test="carrnumlist!=null">carrnum=
+                    <foreach collection="carrnumlist" item="item" >
+                        #{item}
+                    </foreach> and
+                </if>
+                <if test="sensormainfrm!=null">sensormainfrm in
+                    <foreach collection="sensormainfrm" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+            </trim>
+        </when>
+        <when test="carrnumlist!=null">
+            <trim prefix="and" suffixOverrides="and">
+                <if test="trnnumlist!=null">trnnum=
+                    <foreach collection="trnnumlist" item="item" >
+                        #{item.trnnum}
+                    </foreach> and
+                </if>
+                <if test="carrnumlist!=null">carrnum in
+                    <foreach collection="carrnumlist" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+            </trim>
+        </when>
+        <when test="trnnumlist!=null">
+            <trim prefix="and" suffixOverrides="and">
+                <if test="trnnumlist!=null">trnnum in
+                    <foreach collection="trnnumlist" item="item" open="(" separator="," close=")">
+                        #{item.trnnum}
+                    </foreach>
+                </if>
+            </trim>
+        </when>
+        <otherwise></otherwise>
+    </choose>
+</sql>
+    <!-- 按异常状态分组查询 用于异常数据统计报表 -->
+    <select id="queryExcepStat" parameterType="com.bcht.axletempmonitor.vo.ReportVo" resultMap="statResultMap">
+        select
+        <if test="sensorlist!=null">sensorcategory,</if>
+        <if test="sensormainfrm!=null">sensormainfrm,</if>
+        <if test="carrnumlist!=null">carrnum,</if>
+        <if test="trnnumlist!=null">trnnum,</if>
+        excepsts,count(id) as count1 from bch_sensor_exception where excepstarttime &gt;= #{starttime} and excepstarttime &lt;= #{endtime}
+       <include refid="Report_Stat_Condition"/>
+        GROUP BY excepsts
+    </select>
+
+
+    <select id="queryBrkdwnTypeStat" parameterType="com.bcht.axletempmonitor.vo.ReportVo" resultMap="statResultMap">
+        select
+        <if test="sensorlist!=null">sensorcategory,</if>
+        <if test="sensormainfrm!=null">sensormainfrm,</if>
+        <if test="carrnumlist!=null">carrnum,</if>
+        <if test="trnnumlist!=null">trnnum,</if>
+        brkdwntype,count(id) as count1 from bch_breakdown_info where brkdwntime &gt;= #{starttime} and brkdwntime &lt;= #{endtime}
+        <include refid="Report_Stat_Condition"/>
+        GROUP BY brkdwntype
+    </select>
+
+    <select id="queryBrkdwnStsStat" parameterType="com.bcht.axletempmonitor.vo.ReportVo" resultMap="statResultMap">
+        select
+        <if test="sensorlist!=null">sensorcategory,</if>
+        <if test="sensormainfrm!=null">sensormainfrm,</if>
+        <if test="carrnumlist!=null">carrnum,</if>
+        <if test="trnnumlist!=null">trnnum,</if>
+        brkdwnsts,count(id) as count1 from bch_breakdown_info where brkdwntime &gt;= #{starttime} and brkdwntime &lt;= #{endtime}
+        <include refid="Report_Stat_Condition"/>
+        GROUP BY brkdwnsts
+    </select>
+
+    <!-- 列车列表查询 -->
+    <select id="queryTrainFuzzyByNum" parameterType="com.bcht.axletempmonitor.vo.TrainVo" resultMap="defineTrainResultMap" >
+        SELECT trn.id,trn.trnnum,trn.trntype,trn.trnattach,trn.trnsupplier  FROM bch_traininfo trn where 1=1
+        <if test="trnnum!=null">
+            and trn.trnnum like "%"#{trnnum}"%"
+        </if>
+        <if test="trntype!=null">
+            and trn.trntype=#{trntype}
+        </if>
+        <if test="trnattach!=null">
+            and trn.trnattach=#{trnattach}
+        </if>
+    </select>
+
+    <!--添加列车-->
+    <insert id="insertTrain" parameterType="com.bcht.axletempmonitor.vo.TrainVo">
+      insert into bch_traininfo(trnnum,trntype,trnattach,trnsupplier) values(#{trnnum},#{trntype},#{trnattach},#{trnsupplier})
+    </insert>
+    <!--根据id查列车信息-->
+    <select id="queryTrainById" parameterType="com.bcht.axletempmonitor.vo.TrainVo" resultMap="defineTrainResultMap">
+        select trnnum,trntype,trnattach,trnsupplier from bch_traininfo where id=#{id}
+    </select>
+    <!--修改列车-->
+    <update id="updateTrain" parameterType="com.bcht.axletempmonitor.vo.TrainVo">
+      update bch_traininfo
+      <trim prefix="set" suffixOverrides="," >
+          <if test="trnnum!=null">trnnum=#{trnnum},</if>
+          <if test="trntype!=null">trntype=#{trntype},</if>
+          <if test="trnattach!=null">trnattach=#{trnattach},</if>
+          <if test="trnsupplier!=null">trnsupplier=#{trnsupplier},</if>
+      </trim>
+        where id=#{id}
+    </update>
+    <!--删除列车-->
+    <delete id="deleteTrain" parameterType="com.bcht.axletempmonitor.vo.TrainVo">
+      delete from bch_traininfo where
+      <choose>
+          <when test="id!=null">
+              id=#{id}
+          </when>
+          <when test="selectids!=null">
+            id in
+            <foreach collection="selectids" item="item" open="(" separator="," close=")">
+              #{item}
+            </foreach>
+          </when>
+          <otherwise></otherwise>
+      </choose>
+    </delete>
+
+</mapper>
+
+
