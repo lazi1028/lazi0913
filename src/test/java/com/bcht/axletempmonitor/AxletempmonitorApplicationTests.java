@@ -4,11 +4,8 @@ import com.bcht.axletempmonitor.controller.FileController;
 import com.bcht.axletempmonitor.controller.UserController;
 import com.bcht.axletempmonitor.pojo.BchSensorStatus;
 import com.bcht.axletempmonitor.pojo.BchSensorTemperature;
-import com.bcht.axletempmonitor.pojo.BchUserinfo;
 import com.bcht.axletempmonitor.utils.ZipFilesUtils;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.crypto.hash.SimpleHash;
-import org.apache.shiro.session.Session;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,7 +85,7 @@ public class AxletempmonitorApplicationTests {
     }
     @Test
     public void test5(){
-
+        System.out.println();
 
     }
     public static Object getGetMethod(Object ob , String name)throws Exception {
